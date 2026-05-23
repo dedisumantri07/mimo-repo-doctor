@@ -18,6 +18,8 @@ export default function HomePage() {
 
     setLoading(true);
     try {
+      console.log('Starting analysis with:', { url, repoTree, inputMode });
+      
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -27,19 +29,27 @@ export default function HomePage() {
         }),
       });
 
+      console.log('API response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Analysis failed');
+        const errorText = await response.text();
+        console.error('API error response:', errorText);
+        throw new Error(`Analysis failed: ${response.status} ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('Analysis result received:', data);
+      
       toast.success('Analysis complete!');
       
       // Store result and redirect
       sessionStorage.setItem('analysisResult', JSON.stringify(data));
+      console.log('Data stored in sessionStorage, redirecting...');
       window.location.href = '/results';
     } catch (error) {
-      toast.error('Failed to analyze repository');
-      console.error(error);
+      console.error('Analysis error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to analyze repository';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
