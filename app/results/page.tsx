@@ -171,6 +171,12 @@ export default function ResultsPage() {
       try {
         const parsed = JSON.parse(stored);
         console.log('Loaded from sessionStorage:', parsed);
+        console.log('Data structure:', {
+          hasRepoData: !!parsed.repoData,
+          hasAnalysis: !!parsed.analysis,
+          repoDataKeys: parsed.repoData ? Object.keys(parsed.repoData) : [],
+          analysisKeys: parsed.analysis ? Object.keys(parsed.analysis) : [],
+        });
         setResult(parsed);
       } catch (e) {
         console.error('Failed to parse stored result:', e);
