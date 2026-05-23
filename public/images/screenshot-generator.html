@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiMo Repo Doctor - Screenshot Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .screenshot-card {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .screenshot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .screenshot-header {
+            background: #0f172a;
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .screenshot-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #10b981; }
+        
+        .screenshot-title {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        
+        .screenshot-content {
+            padding: 1.5rem;
+        }
+        
+        /* Screenshot 1: Homepage */
+        .homepage {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .homepage .hero {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .homepage h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #f1f5f9;
+        }
+        
+        .homepage p {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+        
+        .input-group {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: #f1f5f9;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Screenshot 2: Analysis Results */
+        .analysis-results {
+            background: #0f172a;
+        }
+        
+        .repo-info {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .repo-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .repo-meta {
+            display: flex;
+            gap: 1rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .result-card {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid #6366f1;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Screenshot 3: README Analysis */
+        .readme-analysis {
+            background: #0f172a;
+        }
+        
+        .score-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .score {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #10b981, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .score-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .improvement-list {
+            list-style: none;
+        }
+        
+        .improvement-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #1e293b;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .improvement-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .checkmark {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        /* Screenshot 4: Grant Pitch */
+        .grant-pitch {
+            background: #0f172a;
+        }
+        
+        .pitch-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .pitch-title {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pitch-subtitle {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .pitch-content {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+        
+        .pitch-highlight {
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+        }
+        
+        /* Screenshot 5: Installation Guide */
+        .installation-guide {
+            background: #0f172a;
+        }
+        
+        .guide-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .guide-title {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .guide-steps {
+            counter-reset: step;
+        }
+        
+        .guide-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #1e293b;
+            border-radius: 8px;
+        }
+        
+        .guide-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            counter-increment: step;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .step-number::before {
+            content: counter(step);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #f1f5f9;
+            margin-top: 0.5rem;
+            overflow-x: auto;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid #334155;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MiMo GitHub Repo Doctor</h1>
+            <p>AI-powered repository analysis for grant submissions & hackathons</p>
+        </div>
+        
+        <div class="screenshots-grid">
+            <!-- Screenshot 1: Homepage -->
+            <div class="screenshot-card">
+                <div class="screenshot-header">
+                    <div class="screenshot-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="screenshot-title">Homepage - Analyze Repository</div>
+                </div>
+                <div class="screenshot-content homepage">
+                    <div class="hero">
+                        <h2>Analyze Your GitHub Repository</h2>
+                        <p>Paste your GitHub URL to get AI-powered analysis and improvement suggestions</p>
+                        
+                        <div class="input-group">
+                            <label class="input-label">GitHub Repository URL</label>
+                            <input type="text" class="input-field" value="https://github.com/username/your-project" readonly>
+                        </div>
+                        
+                        <button class="btn">Analyze Repository</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Screenshot 2: Analysis Results -->
+            <div class="screenshot-card">
+                <div class="screenshot-header">
+                    <div class="screenshot-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="screenshot-title">Analysis Results</div>
+                </div>
+                <div class="screenshot-content analysis-results">
+                    <div class="repo-info">
+                        <div class="repo-name">username/your-project</div>
+                        <div class="repo-meta">
+                            <span>⭐ 128 stars</span>
+                            <span>🔄 12 forks</span>
+                            <span>📝 Last updated: 2 days ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-title">README Quality</div>
+                            <div class="result-desc">Good structure, needs better documentation</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-title">Installation Guide</div>
+                            <div class="result-desc">Missing detailed setup instructions</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-title">Issue Checklist</div>
+                            <div class="result-desc">5 critical issues identified</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-title">Grant Pitch</div>
+                            <div class="result-desc">Ready for submission with improvements</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Screenshot 3: README Analysis -->
+            <div class="screenshot-card">
+                <div class="screenshot-header">
+                    <div class="screenshot-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="screenshot-title">README Analysis</div>
+                </div>
+                <div class="screenshot-content readme-analysis">
+                    <div class="score-card">
+                        <div class="score">78/100</div>
+                        <div class="score-label">README Quality Score</div>
+                    </div>
+                    
+                    <ul class="improvement-list">
+                        <li class="improvement-item">
+                            <span class="checkmark">✓</span>
+                            <span>Add project logo and badges</span>
+                        </li>
+                        <li class="improvement-item">
+                            <span class="checkmark">✓</span>
+                            <span>Improve installation instructions</span>
+                        </li>
+                        <li class="improvement-item">
+                            <span class="checkmark">✓</span>
+                            <span>Add usage examples</span>
+                        </li>
+                        <li class="improvement-item">
+                            <span class="checkmark">✓</span>
+                            <span>Include contribution guidelines</span>
+                        </li>
+                        <li class="improvement-item">
+                            <span class="checkmark">✓</span>
+                            <span>Add license information</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Screenshot 4: Grant Pitch -->
+            <div class="screenshot-card">
+                <div class="screenshot-header">
+                    <div class="screenshot-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="screenshot-title">Grant Pitch Generator</div>
+                </div>
+                <div class="screenshot-content grant-pitch">
+                    <div class="pitch-header">
+                        <div class="pitch-title">Grant Application Pitch</div>
+                        <div class="pitch-subtitle">AI-generated pitch for your project</div>
+                    </div>
+                    
+                    <div class="pitch-content">
+                        <p>This project addresses the critical need for <span class="pitch-highlight">automated repository quality assessment</span> in the open-source ecosystem. By leveraging AI to analyze GitHub repositories, we provide developers with actionable insights to improve their projects for grant submissions and hackathons.</p>
+                        
+                        <p style="margin-top: 1rem;">Our solution has already helped <span class="pitch-highlight">50+ developers</span> improve their READMEs, installation guides, and grant pitches, increasing their submission success rates by 40%.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Screenshot 5: Installation Guide -->
+            <div class="screenshot-card">
+                <div class="screenshot-header">
+                    <div class="screenshot-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="screenshot-title">Installation Guide</div>
+                </div>
+                <div class="screenshot-content installation-guide">
+                    <div class="guide-header">
+                        <div class="guide-title">Generated Installation Guide</div>
+                    </div>
+                    
+                    <div class="guide-steps">
+                        <div class="guide-step">
+                            <div class="step-number"></div>
+                            <div class="step-content">
+                                <div class="step-title">Clone Repository</div>
+                                <div class="step-desc">Clone the project to your local machine</div>
+                                <div class="code-block">git clone https://github.com/username/your-project.git</div>
+                            </div>
+                        </div>
+                        
+                        <div class="guide-step">
+                            <div class="step-number"></div>
+                            <div class="step-content">
+                                <div class="step-title">Install Dependencies</div>
+                                <div class="step-desc">Install required packages</div>
+                                <div class="code-block">npm install</div>
+                            </div>
+                        </div>
+                        
+                        <div class="guide-step">
+                            <div class="step-number"></div>
+                            <div class="step-content">
+                                <div class="step-title">Run Development Server</div>
+                                <div class="step-desc">Start the development environment</div>
+                                <div class="code-block">npm run dev</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>MiMo GitHub Repo Doctor - Screenshot Mockups for README</p>
+            <p>Generated on: 2026-05-23</p>
+        </div>
+    </div>
+</body>
+</html>

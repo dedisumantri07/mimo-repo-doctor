@@ -1,0 +1,90 @@
+{
+  "name": "mimo-repo-doctor",
+  "version": "1.0.0",
+  "description": "AI-powered repository analysis tool to optimize projects for grant submissions and hackathons",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:all": "npm run lint && npm run type-check && npm run test && npm run test:e2e",
+    "analyze": "ANALYZE=true next build",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "octokit": "^3.1.0",
+    "axios": "^1.6.0",
+    "zod": "^3.22.0",
+    "date-fns": "^2.30.0",
+    "lodash-es": "^4.17.21",
+    "js-cookie": "^3.0.5",
+    "react-markdown": "^9.0.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "lucide-react": "^0.292.0",
+    "react-hot-toast": "^2.4.1",
+    "clsx": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/jest": "^29.5.0",
+    "@types/lodash-es": "^4.17.12",
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^14.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "prettier": "^3.0.0",
+    "tailwindcss": "^3.3.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16",
+    "jest": "^29.7.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^6.1.0",
+    "@testing-library/user-event": "^14.5.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "@playwright/test": "^1.40.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "github",
+    "repository",
+    "analysis",
+    "ai",
+    "grant",
+    "hackathon",
+    "mimo",
+    "nextjs",
+    "typescript"
+  ],
+  "author": "MiMo Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/mimo-repo-doctor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/mimo-repo-doctor/issues"
+  },
+  "homepage": "https://github.com/username/mimo-repo-doctor#readme"
+}
