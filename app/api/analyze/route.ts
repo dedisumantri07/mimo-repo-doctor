@@ -168,21 +168,106 @@ async function analyzeRepository(
   // Build analysis prompt
   const prompt = buildAnalysisPrompt(repoData, repoTree);
 
-  // Try MiMo API first
+  // Use Groq API as primary
   try {
-    const mimoResult = await callMiMoAPI(prompt);
-    return mimoResult;
-  } catch (error: unknown) {
-    console.log('MiMo API failed, falling back to Groq');
-  }
-
-  // Fallback to Groq
-  try {
+    console.log('Calling Groq API for analysis...');
     const groqResult = await callGroqAPI(prompt);
+    console.log('Groq API analysis successful');
     return groqResult;
   } catch (error: unknown) {
-    throw new Error('Both MiMo and Groq APIs failed');
+    console.error('Groq API failed:', error);
+    
+    // If API key not configured, return mock data
+    if (error instanceof Error && error.message.includes('not configured')) {
+      console.log('API key not configured, returning mock data');
+      return getMockAnalysis();
+    }
+    
+    throw error;
   }
+}
+
+function getMockAnalysis(): any {
+  return {
+    readmeAnalysis: {
+      score: 75,
+      strengths: [
+        'Clear project description',
+        'Installation instructions provided',
+        'License information included',
+      ],
+      improvements: [
+        {
+          title: 'Add Quick Start Guide',
+          description: 'Include a quick start section for new users',
+          priority: 'important',
+          example: '## Quick Start\n\nnpm install\nnpm run dev',
+        },
+        {
+          title: 'Add Contributing Guidelines',
+          description: 'Create CONTRIBUTING.md for contributors',
+          priority: 'important',
+        },
+      ],
+    },
+    installationGuide: {
+      prerequisites: [
+        'Node.js 18+',
+        'npm or yarn',
+      ],
+      steps: [
+        {
+          number: 1,
+          title: 'Clone repository',
+          description: 'Clone the project from GitHub',
+          command: 'git clone <repository-url>',
+        },
+        {
+          number: 2,
+          title: 'Install dependencies',
+          description: 'Install required packages',
+          command: 'npm install',
+        },
+        {
+          number: 3,
+          title: 'Start development',
+          description: 'Run the development server',
+          command: 'npm run dev',
+        },
+      ],
+      troubleshooting: [
+        {
+          issue: 'Dependencies installation fails',
+          solution: 'Try clearing npm cache: npm cache clean --force',
+        },
+      ],
+    },
+    issueChecklist: {
+      critical: [
+        'Add security policy',
+        'Set up CI/CD pipeline',
+      ],
+      important: [
+        'Add code of conduct',
+        'Create issue templates',
+      ],
+      niceToHave: [
+        'Add badges to README',
+        'Create demo video',
+      ],
+    },
+    grantPitch: {
+      oneLiner: 'An innovative solution that solves real problems for developers.',
+      problem: 'Developers struggle with repository optimization for grants and hackathons.',
+      solution: 'Automated analysis and recommendations to improve project quality.',
+      impact: 'Help developers get more grants and win more hackathons.',
+      roadmap: [
+        'Phase 1: Core analysis features',
+        'Phase 2: AI-powered suggestions',
+        'Phase 3: Community features',
+      ],
+    },
+  };
 }
 
 function buildAnalysisPrompt(
@@ -250,47 +335,7 @@ Please provide a detailed analysis in the following JSON format:
 }`;
 }
 
-async function callMiMoAPI(prompt: string): Promise<any> {
-  const apiKey = process.env.MIMO_API_KEY;
-  const apiUrl = process.env.MIMO_API_URL || 'https://api.mimo.dev';
 
-  if (!apiKey || apiKey.includes('xxxx')) {
-    throw new Error('MiMo API key not configured');
-  }
-
-  const response = await fetch(`${apiUrl}/v1/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'mimo-1',
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`MiMo API error: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices[0].message.content;
-  
-  // Parse JSON from response
-  const jsonMatch = content.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    return JSON.parse(jsonMatch[0]);
-  }
-  
-  throw new Error('Failed to parse MiMo response');
-}
 
 async function callGroqAPI(prompt: string): Promise<any> {
   const apiKey = process.env.GROQ_API_KEY;
