@@ -55,13 +55,13 @@ export async function POST(request: NextRequest) {
     // Analyze with AI
     const analysis = await analyzeRepository(repoData, repoTree);
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        repoData,
-        analysis,
-      },
-    });
+    const responseData = {
+      repoData,
+      analysis,
+    };
+
+    console.log('Sending response:', responseData);
+    return NextResponse.json(responseData);
   } catch (error: any) {
     console.error('Analysis error:', error);
     return NextResponse.json(
