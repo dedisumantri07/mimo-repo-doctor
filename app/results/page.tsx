@@ -63,13 +63,129 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'readme' | 'install' | 'issues' | 'grant'>('readme');
 
+  const getMockData = (): AnalysisResult => {
+    return {
+      repoData: {
+        owner: 'vercel',
+        repo: 'next.js',
+        description: 'The React Framework for Production',
+        stars: 120000,
+        forks: 25000,
+        lastUpdated: new Date().toISOString(),
+        license: 'MIT',
+        hasTests: true,
+        hasCI: true,
+      },
+      analysis: {
+        readmeAnalysis: {
+          score: 85,
+          strengths: [
+            'Clear project description and purpose',
+            'Comprehensive installation instructions',
+            'Well-organized documentation structure',
+            'Active community and contribution guidelines',
+          ],
+          improvements: [
+            {
+              title: 'Add Quick Start Section',
+              description: 'Include a quick start guide at the top of README for new users to get started in under 5 minutes.',
+              priority: 'important',
+              example: '## Quick Start\n\nnpx create-next-app@latest\ncd my-app\nnpm run dev',
+            },
+            {
+              title: 'Add Troubleshooting Section',
+              description: 'Create a dedicated troubleshooting section for common issues and their solutions.',
+              priority: 'nice-to-have',
+            },
+          ],
+        },
+        installationGuide: {
+          prerequisites: [
+            'Node.js 18.17 or later',
+            'macOS, Windows, or Linux',
+            'npm or yarn package manager',
+          ],
+          steps: [
+            {
+              number: 1,
+              title: 'Create a new Next.js app',
+              description: 'Use create-next-app to bootstrap a new project',
+              command: 'npx create-next-app@latest my-app',
+            },
+            {
+              number: 2,
+              title: 'Navigate to project directory',
+              description: 'Change into the newly created project folder',
+              command: 'cd my-app',
+            },
+            {
+              number: 3,
+              title: 'Start development server',
+              description: 'Run the development server to see your app',
+              command: 'npm run dev',
+            },
+          ],
+          troubleshooting: [
+            {
+              issue: 'Port 3000 already in use',
+              solution: 'Change the port by running: PORT=3001 npm run dev',
+            },
+          ],
+        },
+        issueChecklist: {
+          critical: [
+            'Add security policy (SECURITY.md)',
+            'Set up automated dependency updates',
+          ],
+          important: [
+            'Add code of conduct',
+            'Create issue templates',
+            'Add pull request template',
+          ],
+          niceToHave: [
+            'Add badges to README',
+            'Create demo GIF or video',
+            'Add architecture diagram',
+          ],
+        },
+        grantPitch: {
+          oneLiner: 'The React Framework that enables production-grade applications with zero configuration.',
+          problem: 'Building production-ready React applications requires complex configuration, optimization, and infrastructure setup.',
+          solution: 'Next.js provides a complete framework with built-in routing, server-side rendering, static generation, and API routes out of the box.',
+          impact: 'Enables developers to build faster, more performant web applications while reducing development time by 50%.',
+          roadmap: [
+            'Q1: Improve build performance by 30%',
+            'Q2: Add native TypeScript support',
+            'Q3: Enhance image optimization',
+            'Q4: Launch edge runtime features',
+          ],
+        },
+      },
+    };
+  };
+
   useEffect(() => {
+    // Try to get data from sessionStorage first
     const stored = sessionStorage.getItem('analysisResult');
     if (stored) {
       try {
-        setResult(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        console.log('Loaded from sessionStorage:', parsed);
+        setResult(parsed);
       } catch (e) {
-        console.error('Failed to parse stored result');
+        console.error('Failed to parse stored result:', e);
+      }
+    } else {
+      // If no sessionStorage, check URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const mockData = urlParams.get('mock');
+      
+      if (mockData === 'true') {
+        // Load mock data for testing
+        console.log('Loading mock data for testing');
+        setResult(getMockData());
+      } else {
+        console.log('No analysis data found in sessionStorage or URL');
       }
     }
     setLoading(false);
