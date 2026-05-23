@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // If URL provided, fetch from GitHub
     if (url) {
-      const match = url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+      const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
       if (!match) {
         return NextResponse.json(
           { error: 'Invalid GitHub URL' },
@@ -172,7 +172,7 @@ async function analyzeRepository(
   try {
     const mimoResult = await callMiMoAPI(prompt);
     return mimoResult;
-  } catch (error) {
+  } catch (error: unknown) {
     console.log('MiMo API failed, falling back to Groq');
   }
 
@@ -180,7 +180,7 @@ async function analyzeRepository(
   try {
     const groqResult = await callGroqAPI(prompt);
     return groqResult;
-  } catch (error) {
+  } catch (error: unknown) {
     throw new Error('Both MiMo and Groq APIs failed');
   }
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   CheckCircle, AlertCircle, Star, GitFork, Calendar, 
-  Copy, Download, Share2, ArrowLeft, ExternalLink 
+  Copy, Download, ArrowLeft, ExternalLink 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -81,7 +81,9 @@ export default function ResultsPage() {
   };
 
   const handleDownload = () => {
-    if (!result) return;
+    if (!result) {
+      return;
+    }
     
     const content = generateMarkdown(result);
     const blob = new Blob([content], { type: 'text/markdown' });
@@ -118,7 +120,9 @@ export default function ResultsPage() {
       analysis.readmeAnalysis.improvements.forEach(imp => {
         markdown += `#### ${imp.title} (${imp.priority})\n`;
         markdown += `${imp.description}\n`;
-        if (imp.example) markdown += `\`\`\`\n${imp.example}\n\`\`\`\n`;
+        if (imp.example) {
+          markdown += `\`\`\`\n${imp.example}\n\`\`\`\n`;
+        }
         markdown += `\n`;
       });
 
@@ -130,7 +134,9 @@ export default function ResultsPage() {
       analysis.installationGuide.steps.forEach(step => {
         markdown += `${step.number}. **${step.title}**\n`;
         markdown += `   ${step.description}\n`;
-        if (step.command) markdown += `   \`\`\`bash\n   ${step.command}\n   \`\`\`\n`;
+        if (step.command) {
+          markdown += `   \`\`\`bash\n   ${step.command}\n   \`\`\`\n`;
+        }
       });
 
       markdown += `\n## Issue Checklist\n\n`;
@@ -434,7 +440,7 @@ export default function ResultsPage() {
               <div className="space-y-6">
                 <div className="card">
                   <h3 className="text-xl font-bold mb-4">One-Line Pitch</h3>
-                  <p className="text-lg text-slate-300 italic">"{analysis.grantPitch.oneLiner}"</p>
+                  <p className="text-lg text-slate-300 italic">&quot;{analysis.grantPitch.oneLiner}&quot;</p>
                 </div>
 
                 <div className="card">

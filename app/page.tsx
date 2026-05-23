@@ -127,7 +127,7 @@ export default function HomePage() {
                   disabled={loading}
                 />
                 <p className="text-sm text-slate-400 text-left">
-                  Paste output from: tree -L 3 -I 'node_modules'
+                  Paste output from: tree -L 3 -I &apos;node_modules&apos;
                 </p>
               </div>
             )}
