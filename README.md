@@ -7,6 +7,20 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38bdf8)](https://tailwindcss.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Netlify Status](https://img.shields.io/badge/Netlify-Live-00C7B7.svg)](https://mimo-repo-doctor.netlify.app/)
+[![Groq API](https://img.shields.io/badge/Groq%20API-Active-FF6B35.svg)](https://console.groq.com/)
+
+---
+
+## 🚀 Live Demo
+
+**🎉 Project is LIVE and successfully deployed!**
+
+- **Live URL:** https://mimo-repo-doctor.netlify.app/
+- **Status:** ✅ Production Ready
+- **Deployment:** Netlify (Auto-deploy from GitHub)
+- **API:** Groq API (Llama 3.3 70B) - Fully Functional
+- **Last Updated:** May 23, 2026
 
 ---
 
@@ -589,45 +603,52 @@ See [.github/workflows/deploy.yml](.github/workflows/deploy.yml) for details.
 
 ## 📡 API Documentation
 
+### ✅ API Status: Fully Functional with Groq
+
+**Primary AI Provider:** Groq API (Llama 3.3 70B)  
+**Status:** ✅ Active and Working  
+**Fallback:** Mock data when API key not configured
+
 ### POST /api/analyze
 
-Analyze a GitHub repository.
+Analyze a GitHub repository using Groq AI.
 
 **Request:**
 ```json
 {
-  "input": "https://github.com/user/repo",
-  "inputType": "url"
+  "url": "https://github.com/user/repo",
+  "repoTree": null
 }
 ```
 
 **Response:**
 ```json
 {
-  "status": "success",
-  "repository": {
-    "name": "repo",
+  "repoData": {
     "owner": "user",
+    "repo": "repo",
     "description": "Project description",
-    "language": "TypeScript",
-    "stars": 100
+    "stars": 100,
+    "forks": 25,
+    "lastUpdated": "2026-05-23T00:00:00Z",
+    "license": "MIT",
+    "hasTests": true,
+    "hasCI": true
   },
   "analysis": {
-    "readme": {
-      "score": 7,
+    "readmeAnalysis": {
+      "score": 90,
+      "strengths": ["Clear description", "Good documentation"],
       "improvements": [...]
     },
-    "installation": {...},
-    "issues": {...},
-    "pitch": {...}
-  },
-  "metadata": {
-    "analyzedAt": "2026-05-23T00:00:00Z",
-    "processingTime": 15000,
-    "aiProvider": "mimo"
+    "installationGuide": {...},
+    "issueChecklist": {...},
+    "grantPitch": {...}
   }
 }
 ```
+
+**AI Provider:** Groq (Llama 3.3 70B) with JSON response format
 
 ### GET /api/repo-preview?url=...
 
